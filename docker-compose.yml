@@ -1,0 +1,19 @@
+version: '3'
+services:
+  api:
+    build:
+      context: ./
+      dockerfile: ./Dockerfile
+    image: scribblr-test-api:v1
+    ports:
+      - 8000:8000
+    volumes:
+      - .:/app
+    tty: true
+    container_name: scribblr-backend
+    networks:
+      - application
+
+networks:
+  application:
+    driver: bridge

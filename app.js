@@ -1,9 +1,8 @@
 const express = require('express');
-require('dotenv').config({ path: './cofing.env' });
 
 const app = express();
 
-const port = process.env.PORT || 3000;
+app.use(express.json());
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -12,6 +11,4 @@ app.get('/', (req, res) => {
   });
 });
 
-app.listen(port, () => {
-  console.log(`Server running at http://${process.env.HOST}:${port}/`);
-});
+module.exports = app;
