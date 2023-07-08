@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { DBConnection } = require('./database/Mongo.database')
+const { DBConnection } = require('./database/mongo.database')
 const { DB } = require('./config/db.config')
 
 process.on('uncaugthException', (err) => {

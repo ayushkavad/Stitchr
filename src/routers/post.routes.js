@@ -5,7 +5,7 @@ const {
   createOne,
   updateOne,
   deleteOne,
-} = require('./../controllers/Post.controller')
+} = require('../controllers/post.controller')
 
 const router = express.Router()
 
