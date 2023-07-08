@@ -1,29 +1,14 @@
-const mongoose = require('mongoose')
 require('dotenv').config()
+const { DBConnection } = require('./database/Mongo.database')
+const { DB } = require('./config/db.config')
+
+process.on('uncaugthException', (err) => {
+  console.log(err.name, err.message)
+  console.log('UNCAUGTH EXCEPTION Shutting down...')
+  process.exit(1)
+})
 
 const app = require('./app')
-
-const DB = process.env.DATABASE_URL.replace(
-  '<PASSWORD>',
-  process.env.DATABASE_ROOT_PASSWORD
-)
-
-const DBConnection = (DB) => {
-  return new Promise((resolve, reject) => {
-    mongoose.set('strictQuery', false)
-    mongoose
-      .connect(DB, {
-        useNewUrlParser: true,
-        useUnifiedTopology: true,
-      })
-      .then(() => {
-        resolve()
-      })
-      .catch((error) => {
-        reject(error)
-      })
-  })
-}
 
 DBConnection(DB)
   .then(() => {
@@ -35,8 +20,14 @@ DBConnection(DB)
 
 const port = process.env.PORT || 3000
 
-console.log(process.env.HOST, process.env.PORT)
-
 app.listen(port, () => {
   console.log(`Server running at http://${process.env.HOST}:${port}/`)
+})
+
+process.on('unhandledRejection', (err) => {
+  console.log(err.name, err.message)
+  console.log('UNCAUGTH REJECTION Shutting down...')
+  server.close(() => {
+    process.exit(1)
+  })
 })

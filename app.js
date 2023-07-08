@@ -1,14 +1,20 @@
-const express = require('express');
+const express = require('express')
+const morgan = require('morgan')
+const postRouter = require('./routers/Post.routes')
 
-const app = express();
+const app = express()
 
-app.use(express.json());
+app.use(express.json())
+
+if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
 
 app.get('/', (req, res) => {
   res.status(200).json({
     status: 'success',
-    message: 'hello from the scribblr',
-  });
-});
+    message: 'hello from the stitchr',
+  })
+})
 
-module.exports = app;
+app.use('/api/v1/posts/', postRouter)
+
+module.exports = app
