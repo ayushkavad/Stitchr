@@ -2,12 +2,11 @@ const express = require('express')
 const {
   getAll,
   getOne,
-  resizeImageCover,
-  uploadImageCover,
   createOne,
   updateOne,
   deleteOne,
 } = require('../controllers/post.controller')
+const { uploadImageCover } = require('../utils/upload')
 
 const router = express.Router()
 
