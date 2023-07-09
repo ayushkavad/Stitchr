@@ -20,7 +20,7 @@ DBConnection(DB)
 
 const port = process.env.PORT || 3000
 
-app.listen(port, () => {
+const server = app.listen(port, () => {
   console.log(`Server running at http://${process.env.HOST}:${port}/`)
 })
 
