@@ -11,6 +11,10 @@ const postSchema = new mongoose.Schema({
   mediaContent: {
     type: String,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 })
 
 const Post = mongoose.model('Post', postSchema)

@@ -43,6 +43,10 @@ const authSchema = new mongoose.Schema({
     default: true,
     select: false,
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
   passwordChangedAt: Date,
   passwordResetToken: String,
   passwordResetExpires: Date,
