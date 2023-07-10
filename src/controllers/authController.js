@@ -1,5 +1,6 @@
 const jwt = require('jsonwebtoken')
-const Auth = require('../models/auth.model')
+const Auth = require('../models/authModel')
+const catchAsync = require('../utils/catchAsync')
 
 const signInToken = (id) => {
   return jwt.sign({ id }, process.env.JWT_SECRET, {
@@ -7,7 +8,7 @@ const signInToken = (id) => {
   })
 }
 
-const createSendToken = async (user, statusCode, res) => {
+const createSendToken = catchAsync(async (user, statusCode, res) => {
   const token = signInToken(user._id)
 
   await res.status(statusCode).json({
@@ -17,9 +18,9 @@ const createSendToken = async (user, statusCode, res) => {
       user,
     },
   })
-}
+})
 
-exports.signup = async (req, res, next) => {
+exports.signup = catchAsync(async (req, res, next) => {
   const newUser = await Auth.create({
     name: req.body.name,
     email: req.body.email,
@@ -28,9 +29,9 @@ exports.signup = async (req, res, next) => {
   })
 
   createSendToken(newUser, 201, res)
-}
+})
 
-exports.login = async (req, res, next) => {
+exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body
 
   if (!email || !password) {
@@ -44,7 +45,7 @@ exports.login = async (req, res, next) => {
   }
 
   createSendToken(user, 200, res)
-}
+})
 
 exports.logout = (req, res, next) => {
   // Set a cookie with a short expiration date to invalidate the JWT token

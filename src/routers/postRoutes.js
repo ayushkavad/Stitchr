@@ -5,7 +5,7 @@ const {
   createOne,
   updateOne,
   deleteOne,
-} = require('../controllers/post.controller')
+} = require('../controllers/postController')
 const { uploadImageCover } = require('../utils/upload')
 
 const router = express.Router()
