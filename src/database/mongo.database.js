@@ -1,6 +1,6 @@
 const mongoose = require('mongoose')
 
-const DBConnection = (DB) => {
+const connectionDB = (DB) => {
   return new Promise((resolve, reject) => {
     mongoose.set('strictQuery', false)
     mongoose
@@ -18,5 +18,5 @@ const DBConnection = (DB) => {
 }
 
 module.exports = {
-  DBConnection,
+  connectionDB,
 }

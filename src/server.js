@@ -1,5 +1,5 @@
 require('dotenv').config()
-const { DBConnection } = require('./database/mongo.database')
+const { connectionDB } = require('./database/mongo.database')
 const { DB } = require('./config/db.config')
 
 process.on('uncaugthException', (err) => {
@@ -10,7 +10,7 @@ process.on('uncaugthException', (err) => {
 
 const app = require('./app')
 
-DBConnection(DB)
+connectionDB(DB)
   .then(() => {
     console.log(`DB connect successfully...`)
   })
