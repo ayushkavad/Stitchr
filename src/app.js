@@ -3,7 +3,7 @@ const morgan = require('morgan')
 const postRouter = require('./routers/postRoutes')
 const authRouter = require('./routers/authRouter')
 const AppError = require('./utils/appError')
-const globalErrorHandler = require('./middlewares/errorHandler')
+const globalErrorHandler = require('./helpers/errorHandler')
 
 const app = express()
 

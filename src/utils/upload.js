@@ -1,5 +1,6 @@
 const path = require('path')
 const multer = require('multer')
+const AppError = require('./../utils/appError')
 
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
@@ -15,7 +16,7 @@ const multerFilter = (req, file, cb) => {
   var ext = path.extname(file.originalname)
 
   if (!['.png', '.mp4', '.jpeg'].includes(ext))
-    return cb(new Error('Only images and videos are allowed!'))
+    return cb(new AppError('Only images and videos are allowed!', 400), false)
 
   cb(null, true)
 }
