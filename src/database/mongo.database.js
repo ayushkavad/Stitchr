@@ -17,6 +17,4 @@ const connectionDB = (DB) => {
   })
 }
 
-module.exports = {
-  connectionDB,
-}
+module.exports = { connectionDB }

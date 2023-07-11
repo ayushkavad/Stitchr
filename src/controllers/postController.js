@@ -1,10 +1,16 @@
 const Post = require('../models/postModel')
 const catchAsync = require('./../utils/catchAsync')
 const AppError = require('./../utils/appError')
+const APIFeatures = require('./../utils/apiFeatures')
 
 exports.getAll = catchAsync(async (req, res, next) => {
-  const data = await Post.find().select('-__v')
+  const features = new APIFeatures(Post.find(), req.query)
+    .filter()
+    .sort()
+    .limit()
+    .paginate()
 
+  const data = await features.query
   res.status(200).json({
     status: 'success',
     data: {
