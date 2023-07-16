@@ -1,8 +1,9 @@
 const express = require('express')
 const morgan = require('morgan')
 const postRouter = require('./routers/postRoutes')
+const userRouter = require('./routers/userRouter')
 const AppError = require('./utils/appError')
-const globalErrorHandler = require('./helpers/errorHandler')
+const globalErrorHandler = require('./middlewares/errorHandler')
 
 const app = express()
 
@@ -22,7 +23,8 @@ app.use((req, res, next) => {
   next()
 })
 
-app.use('/api/v1/posts/', postRouter)
+app.use('/api/v1/posts', postRouter)
+app.use('/api/v1/users', userRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can not found ${req.originalUrl} on this server!`, 404))

@@ -1,5 +1,6 @@
 const mongoose = require('mongoose')
-const validator = require('validator')
+const bcrypt = require('bcrypt')
+const { default: isEmail } = require('validator/lib/isEmail')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -11,18 +12,18 @@ const userSchema = new mongoose.Schema({
     type: String,
     required: [true, 'Please provide your email.'],
     unique: [true, 'this email is already used please use another one.'],
-    validate: {
-      validator: function (el) {
-        if (!validator.isEmail(el)) return false
-      },
-      message: 'Please provide valid email address.',
-    },
+    validate: [isEmail, 'Please provide your valid email.'],
   },
   password: {
     type: String,
     required: [true, 'Please provide your password'],
     lower: true,
-    minlength: 8,
+    validate: {
+      validator: function (el) {
+        return el.length >= 8
+      },
+      message: 'Password must be 8 characters long',
+    },
     select: false,
   },
   passwordConfirm: {
@@ -30,7 +31,7 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please confirm your password.'],
     validate: {
       validator: function (el) {
-        return el !== this.password
+        return el === this.password
       },
       message: 'Passwords are not same',
     },
@@ -52,6 +53,21 @@ const userSchema = new mongoose.Schema({
   passwordResetToken: String,
   passwordResetTokenExpires: Date,
 })
+
+userSchema.pre('save', function (next) {
+  if (!this.isModified('password')) return next()
+
+  this.passwordConfirm = undefined
+
+  next()
+})
+
+userSchema.methods.correctPassword = async function (
+  candidatePassword,
+  password
+) {
+  return await bcrypt.compare(candidatePassword, password)
+}
 
 const User = mongoose.model('User', userSchema)
 
