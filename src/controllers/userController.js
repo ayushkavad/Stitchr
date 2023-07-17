@@ -2,7 +2,7 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
 
-const filrer = (obj, ...otherFields) => {
+const filrerFields = (obj, ...otherFields) => {
   const newObj = {}
   Object.keys(obj).forEach((el) => {
     if (!otherFields.includes(el)) {
@@ -23,8 +23,8 @@ exports.updateMe = catchAsync(async (req, res, next) => {
     )
   }
 
-  const filterObj = filter(req.body, 'name', 'email')
-  const user = await User.findByIdAndUpdate(req.params.id, filterObj, {
+  const filterObj = filrerFields(req.body, 'name', 'email')
+  const data = await User.findByIdAndUpdate(req.params.id, filterObj, {
     new: true,
     runValidators: true,
   })
@@ -32,7 +32,16 @@ exports.updateMe = catchAsync(async (req, res, next) => {
   res.status(200).json({
     status: 'success',
     data: {
-      user,
+      data,
     },
+  })
+})
+
+exports.deleteMe = catchAsync(async (req, res, next) => {
+  await User.findByIdAndUpdate(req.user.id, { active: false })
+
+  res.status(204).json({
+    status: 'success',
+    data: null,
   })
 })
