@@ -45,7 +45,8 @@ exports.login = catchAsync(async (req, res, next) => {
 })
 
 exports.forgotPassword = catchAsync(async (req, res, next) => {
-  const user = await User.findOne({ email: req.body.email })
+  const { email } = req.body
+  const user = await User.findOne({ email })
 
   if (!user) {
     return next(new AppError('No user found with that email.', 404))
@@ -65,6 +66,7 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
       json: 'sent reset token through email',
     })
   } catch (err) {
+    console.log(err)
     user.passwordResetToken = undefined
     user.passwordResetTokenExpires = undefined
     await user.save({ validateBeforeSave: false })

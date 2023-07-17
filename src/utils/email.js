@@ -1,6 +1,6 @@
 const nodemailer = require('nodemailer')
 
-module.exports = async (option) => {
+module.exports = async ({ email, resetURL: resetToken }) => {
   const transporter = nodemailer.createTransport({
     host: process.env.EMAIL_HOST,
     port: process.env.EMAIL_PORT,
@@ -12,9 +12,9 @@ module.exports = async (option) => {
 
   const mailOptions = {
     from: 'John Devid <theak5410@gmail.com>',
-    to: option.email,
+    to: email,
     subject: 'Your Stitchr reset password request',
-    text: `A request has been received to change the password for your stitchr account. ${option.resetToken}`,
+    text: `A request has been received to change the password for your stitchr account. ${resetToken}`,
   }
 
   await transporter.sendMail(mailOptions)
