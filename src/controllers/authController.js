@@ -1,4 +1,5 @@
 const jwt = require('jsonwebtoken')
+const crypto = require('crypto')
 const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
 const AppError = require('../utils/appError')
@@ -12,6 +13,19 @@ const signInToken = (id) => {
 
 const createSendToken = (user, statusCode, res) => {
   const token = signInToken(user._id)
+
+  const cookieOptions = {
+    expires: new Date(
+      Date.now() + process.env.JWT_COOKIE_EXPIRES_IN * 24 * 60 * 60 * 1000
+    ),
+    httpOnly: true,
+  }
+
+  if (process.env.NODE_ENV === 'production') cookieOptions.secure = true
+
+  res.cookie('jwt', token, cookieOptions)
+
+  user.password = undefined
 
   res.status(statusCode).json({
     status: 'success',
@@ -79,4 +93,26 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
   }
 })
 
-exports.resetPassword = catchAsync(async (req, res, next) => [])
+exports.resetPassword = catchAsync(async (req, res, next) => {
+  const hashToken = crypto
+    .createHash('sha256')
+    .update(req.body.token)
+    .digest('hex')
+
+  const user = await User.findOne({
+    passwordResetToken: hashToken,
+    passwordChangedAt: { $ge: Date.now() },
+  })
+
+  if (!user) {
+    return next(new AppError('Invalid token or expired!', 400))
+  }
+
+  user.password = req.body.password
+  user.password = req.body.passwordConfirm
+  user.passwordResetToken = undefined
+  user.passwordChangedAt = undefined
+  await user.save()
+
+  createSendToken(user, 200, res)
+})
