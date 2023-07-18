@@ -2,6 +2,7 @@ const crypto = require('crypto')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const { default: isEmail } = require('validator/lib/isEmail')
+const AppError = require('../utils/appError')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -14,11 +15,11 @@ const userSchema = new mongoose.Schema({
     required: [true, 'Please provide your email.'],
     unique: [true, 'this email is already used please use another one.'],
     validate: [isEmail, 'Please provide your valid email.'],
+    lower: true,
   },
   password: {
     type: String,
     required: [true, 'Please provide your password'],
-    lower: true,
     validate: {
       validator: function (el) {
         return el.length >= 8
@@ -74,7 +75,7 @@ userSchema.pre('save', async function (next) {
 })
 
 userSchema.pre(/^find/, function (next) {
-  this.find({ active: { $nq: false } })
+  this.find({ active: { $ne: false } })
   next()
 })
 
