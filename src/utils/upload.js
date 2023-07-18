@@ -26,18 +26,19 @@ const upload = multer({
   fileFilter: multerFilter,
 })
 
-// exports.resizeUserPhoto = (req, res, next) => {
-//   if (!req.file) next()
-
-//   req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
-
-//   sharp(req.file.buffer)
-//     .resize(500, 500)
-//     .toFormat('jpeg')
-//     .jpeg({ quality: 90 })
-//     .toFile(`public/images/${req.file.filename}`)
-
-//   next()
-// }
-
 exports.uploadImageCover = upload.single('mediaContent')
+
+exports.resizeUserPhoto = (req, res, next) => {
+  if (!req.file) next()
+  console.log(req)
+
+  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+
+  sharp(req.file.buffer)
+    .resize(500, 500)
+    .toFormat('jpeg')
+    .jpeg({ quality: 90 })
+    .toFile(`public/images/${req.file.filename}`)
+
+  next()
+}

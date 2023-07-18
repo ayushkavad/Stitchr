@@ -50,11 +50,14 @@ exports.signup = catchAsync(async (req, res, next) => {
 exports.login = catchAsync(async (req, res, next) => {
   const { email, password } = req.body
 
+  if (!email || !password)
+    return next(new AppError('Please provide email or password', 400))
+
   const user = await User.findOne({ email }).select('+password')
 
-  if (!user && (await user.correctPassword(password, user.password))) {
-    return next(new AppError('Please provide valid email and password.', 401))
-  }
+  if (!user || !(await user.correctPassword(password, user.password)))
+    return next(new AppError('Please provide valid email and password', 401))
+
   createSendToken(user, 200, res)
 })
 

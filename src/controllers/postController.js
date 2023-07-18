@@ -1,4 +1,4 @@
-const Post = require('../models/postModel')
+const Post = require('./../models/postModel')
 const catchAsync = require('./../utils/catchAsync')
 const AppError = require('./../utils/appError')
 const APIFeatures = require('./../utils/apiFeatures')
@@ -11,6 +11,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
     .paginate()
 
   const data = await features.query
+
   res.status(200).json({
     status: 'success',
     data: {
