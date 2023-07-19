@@ -11,6 +11,55 @@ const filrerFields = (obj, ...allowedFields) => {
   return newObj
 }
 
+exports.getMe = (req, res, next) => {
+  req.params.id = req.user.id
+  next()
+}
+
+exports.getAllUsers = catchAsync(async (req, res, next) => {
+  const data = await User.find()
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data,
+    },
+  })
+})
+
+exports.getUser = catchAsync(async (req, res, next) => {
+  const data = await User.findById(req.params.id)
+
+  if (!data) {
+    return next(new AppError('No Document found with that ID', 404))
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data,
+    },
+  })
+})
+
+exports.updateUser = catchAsync(async (req, res, next) => {
+  const data = await User.findByIdAndUpdate(req.params.id, req.body, {
+    new: true,
+    runValidators: true,
+  })
+
+  if (!data) {
+    return next(new AppError('No Document found with that ID', 404))
+  }
+
+  res.status(200).json({
+    status: 'success',
+    data: {
+      data,
+    },
+  })
+})
+
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -43,5 +92,19 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   res.status(204).json({
     status: 'success',
     data: null,
+  })
+})
+
+exports.deleteUser = catchAsync(async (req, res, next) => {
+  const data = await User.findByIdAndDelete(req.params.id)
+
+  if (!data) {
+    return next(new AppError('No Document found with that ID.', 404))
+  }
+  res.status(204).json({
+    status: 'success',
+    data: {
+      data: null,
+    },
   })
 })
