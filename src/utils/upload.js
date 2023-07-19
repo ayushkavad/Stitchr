@@ -2,9 +2,18 @@ const path = require('path')
 const multer = require('multer')
 const AppError = require('./../utils/appError')
 
+const multerUpload = (storage, fileFilter) => {
+  return {
+    storage,
+    fileFilter,
+  }
+}
+
+// .................................................................
+
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
-    cb(null, 'public/images')
+    cb(null, 'public/posts')
   },
   filename: function (req, file, cb) {
     const extension = file.mimetype.split('/')[1]
@@ -12,33 +21,31 @@ const storage = multer.diskStorage({
   },
 })
 
-const multerFilter = (req, file, cb) => {
+const multerFilterPost = (req, file, cb) => {
   var ext = path.extname(file.originalname)
 
-  if (!['.png', '.mp4', '.jpeg'].includes(ext))
+  if (!['.png', '.mp4', '.jpeg', '.jpg'].includes(ext))
     return cb(new AppError('Only images and videos are allowed!', 400), false)
 
   cb(null, true)
 }
 
-const upload = multer({
-  storage: storage,
-  fileFilter: multerFilter,
-})
+const upload = multer(multerUpload(storage, multerFilterPost))
 
 exports.uploadImageCover = upload.single('mediaContent')
 
-exports.resizeUserPhoto = (req, res, next) => {
-  if (!req.file) next()
-  console.log(req)
+// .................................................................
 
-  req.file.filename = `user-${req.user.id}-${Date.now()}.jpeg`
+const multerStorageUser = multer.memoryStorage()
 
-  sharp(req.file.buffer)
-    .resize(500, 500)
-    .toFormat('jpeg')
-    .jpeg({ quality: 90 })
-    .toFile(`public/images/${req.file.filename}`)
-
-  next()
+const multerFilterUser = (req, file, cb) => {
+  if (file.mimetype.startsWith('image')) {
+    cb(null, true)
+  } else {
+    cb(new AppError('Not an image! please upload image.', 400), false)
+  }
 }
+
+const uploadUser = multer(multerUpload(multerStorageUser, multerFilterUser))
+
+exports.uploadUserPhoto = uploadUser.single('photo')

@@ -6,7 +6,7 @@ const {
   updateOne,
   deleteOne,
 } = require('../controllers/postController')
-const { uploadImageCover } = require('../utils/upload')
+const { uploadImageCover } = require('./../utils/upload')
 
 const router = express.Router()
 
