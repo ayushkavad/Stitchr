@@ -3,6 +3,7 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
+const Post = require('../models/postModel')
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token
@@ -52,4 +53,18 @@ exports.restrictTo = (...roles) => {
     }
     next()
   }
+}
+
+exports.postOwner = (req, res, next) => {
+  if (!req.body.user && req.user.id) {
+    req.body.user = req.user.id
+  }
+  next()
+}
+
+exports.isOwner = async (req, res, next) => {
+  if (req.user.id !== (await Post.findById(req.params.id)))
+    return next(new AppError('You are not allow to perform this action.', 400))
+
+  next()
 }

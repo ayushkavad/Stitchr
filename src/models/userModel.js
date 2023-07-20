@@ -2,7 +2,6 @@ const crypto = require('crypto')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const { default: isEmail } = require('validator/lib/isEmail')
-const AppError = require('../utils/appError')
 
 const userSchema = new mongoose.Schema({
   name: {
@@ -51,6 +50,10 @@ const userSchema = new mongoose.Schema({
     type: Boolean,
     default: true,
     select: false,
+  },
+  createdAt: {
+    type: Date,
+    default: Date.now(),
   },
   passwordChangedAt: Date,
   passwordResetToken: String,

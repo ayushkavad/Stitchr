@@ -15,6 +15,18 @@ const postSchema = new mongoose.Schema({
     type: Date,
     default: Date.now,
   },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'User',
+  },
+})
+
+postSchema.pre(/^find/, function (next) {
+  this.populate({
+    path: 'user',
+    select: '-__v -passwordChangedAt',
+  })
+  next()
 })
 
 const Post = mongoose.model('Post', postSchema)
