@@ -12,6 +12,10 @@ const commentSchema = new mongoose.Schema({
     type: mongoose.Schema.ObjectId,
     ref: 'Post',
   },
+  createdAt: {
+    type: Date,
+    default: Date.now,
+  },
 })
 
 commentSchema.pre(/^find/, function (next) {

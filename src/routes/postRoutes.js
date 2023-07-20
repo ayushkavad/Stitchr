@@ -8,8 +8,11 @@ const {
 } = require('../controllers/postController')
 const { uploadImageCover } = require('./../utils/upload')
 const { protect, postOwner, isOwner } = require('./../middlewares/auth')
+const commentRoutes = require('./../routes/commentRoutes')
 
 const router = express.Router()
+
+router.use('/:postId/comments', commentRoutes)
 
 router
   .route('/')

@@ -29,6 +29,8 @@ exports.getOneComment = catchAsync(async (req, res, next) => {
 })
 
 exports.createComment = catchAsync(async (req, res, next) => {
+  if (!req.body.post) req.body.post = req.params.postId
+  if (!req.body.user) req.body.user = req.user.id
   const data = await Comment.create(req.body)
 
   if (!data) {
@@ -44,7 +46,8 @@ exports.createComment = catchAsync(async (req, res, next) => {
 })
 
 exports.updateComment = catchAsync(async (req, res, next) => {
-  const data = await Comment.findByIdAndUpdate(req.params.id, req.body, {
+  console.log(req.params.commentId)
+  const data = await Comment.findByIdAndUpdate(req.params.commentId, req.body, {
     new: true,
     runValidators: true,
   })
@@ -62,7 +65,7 @@ exports.updateComment = catchAsync(async (req, res, next) => {
 })
 
 exports.deleteComment = catchAsync(async (req, res, next) => {
-  const data = await Comment.findByIdAndDelete(req.params.id)
+  const data = await Comment.findByIdAndDelete(req.params.commentId)
 
   if (!data) {
     return next(new AppError('No document found with that ID.', 404))

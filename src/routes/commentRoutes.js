@@ -6,13 +6,15 @@ const {
   updateComment,
   deleteComment,
 } = require('./../controllers/commentController')
-const router = express.Router()
+const { protect } = require('../middlewares/auth')
+const router = express.Router({ mergeParams: true })
 
-router.route('/').get(getAllComment).post(createComment)
+router.route('/').get(getAllComment).post(protect, createComment)
+router.route('/:id').get(getOneComment)
+
 router
-  .route('/:id')
-  .get(getOneComment)
-  .patch(updateComment)
-  .delete(deleteComment)
+  .route('/:postId/comments/:commentId')
+  .patch(protect, updateComment)
+  .delete(protect, deleteComment)
 
 module.exports = router

@@ -4,7 +4,9 @@ const AppError = require('./../utils/appError')
 const APIFeatures = require('./../utils/apiFeatures')
 
 exports.getAll = catchAsync(async (req, res, next) => {
-  const features = new APIFeatures(Post.find(), req.query)
+  let filter = {}
+  if (req.params.postId) filter = { post: req.params.postId }
+  const features = new APIFeatures(Post.find(filter), req.query)
     .filter()
     .sort()
     .limit()
