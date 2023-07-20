@@ -15,9 +15,9 @@ const {
   updateMe,
   deleteMe,
 } = require('../controllers/userController')
-const { protect, restrictTo } = require('./../middlewares/auth')
-const { uploadUserPhoto } = require('./../utils/upload')
-const { resizeUserPhoto } = require('./../middlewares/resize')
+const { protect, restrictTo } = require('../middlewares/auth')
+const { uploadUserPhoto } = require('../utils/upload')
+const { resizeUserPhoto } = require('../middlewares/resize')
 
 const router = express.Router()
 

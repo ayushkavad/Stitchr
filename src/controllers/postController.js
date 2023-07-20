@@ -21,7 +21,9 @@ exports.getAll = catchAsync(async (req, res, next) => {
 })
 
 exports.getOne = catchAsync(async (req, res, next) => {
-  const data = await Post.findById(req.params.id).select('-__v')
+  const data = await Post.findById(req.params.id)
+    .select('-__v')
+    .populate('comments')
 
   if (!data) {
     return next(new AppError('No document found with that ID!', 404))

@@ -17,7 +17,7 @@ router
   .post(protect, uploadImageCover, postOwner, createOne)
 router
   .route('/:id')
-  .get(protect, getOne)
+  .get(getOne)
   .patch(protect, updateOne)
   .delete(protect, isOwner, deleteOne)
 

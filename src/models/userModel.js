@@ -2,17 +2,16 @@ const crypto = require('crypto')
 const mongoose = require('mongoose')
 const bcrypt = require('bcrypt')
 const { default: isEmail } = require('validator/lib/isEmail')
+const AppError = require('../utils/appError')
 
 const userSchema = new mongoose.Schema({
   name: {
     type: String,
     required: [true, 'Please tell us your name.'],
-    unique: [true, 'please provide another name.'],
   },
   email: {
     type: String,
     required: [true, 'Please provide your email.'],
-    unique: [true, 'this email is already used please use another one.'],
     validate: [isEmail, 'Please provide your valid email.'],
     lower: true,
   },
@@ -68,6 +67,24 @@ userSchema.pre('save', async function (next) {
   this.passwordConfirm = undefined
 
   next()
+})
+
+userSchema.pre('save', async function (next) {
+  if (!(await this.constructor.findOne({ name: this.name }))) {
+    return next()
+  }
+  return next(
+    new AppError('This name is already used. please use anohter one', 400)
+  )
+})
+
+userSchema.pre('save', async function (next) {
+  if (!(await this.constructor.findOne({ email: this.email }))) {
+    return next()
+  }
+  return next(
+    new AppError('This email is already used. please use another one!', 400)
+  )
 })
 
 userSchema.pre('save', async function (next) {

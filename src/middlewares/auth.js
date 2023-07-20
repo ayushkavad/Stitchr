@@ -63,7 +63,8 @@ exports.postOwner = (req, res, next) => {
 }
 
 exports.isOwner = async (req, res, next) => {
-  if (req.user.id !== (await Post.findById(req.params.id)))
+  const data = await Post.findById(req.params.id)
+  if (req.user.id !== data.user.id)
     return next(new AppError('You are not allow to perform this action.', 400))
 
   next()
