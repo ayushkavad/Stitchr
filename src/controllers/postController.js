@@ -24,18 +24,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
 })
 
 exports.getOne = catchAsync(async (req, res, next) => {
-  const data = await Post.findById(req.params.id)
-    .select('-__v')
-    .populate({
-      path: 'comments',
-      populate: {
-        path: 'replies',
-        populate: {
-          path: 'user', // Optionally, you can also populate the user details for each reply
-          select: 'name photo', // Select specific fields if needed
-        },
-      },
-    })
+  const data = await Post.findById(req.params.id).select('-__v')
 
   if (!data) {
     return next(new AppError('No document found with that ID!', 404))

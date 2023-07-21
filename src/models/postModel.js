@@ -33,7 +33,18 @@ postSchema.virtual('comments', {
 postSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
-    select: '-__v -passwordChangedAt',
+    select: '-__v -passwordChangedAt -role',
+  }).populate({
+    path: 'comments',
+    select: '-__v',
+    populate: {
+      path: 'replies',
+      select: '-__v',
+      populate: {
+        path: 'user',
+        select: 'name photo',
+      },
+    },
   })
   next()
 })
