@@ -1,21 +1,28 @@
 const mongoose = require('mongoose')
 
-const commentSchema = new mongoose.Schema({
-  comment: {
-    type: String,
+const commentSchema = new mongoose.Schema(
+  {
+    comment: String,
+    user: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'User',
+    },
+    post: {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Post',
+    },
+    createdAt: {
+      type: Date,
+      default: Date.now,
+    },
   },
-  user: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'User',
-  },
-  post: {
-    type: mongoose.Schema.ObjectId,
-    ref: 'Post',
-  },
-  createdAt: {
-    type: Date,
-    default: Date.now,
-  },
+  { toJSON: { virtuals: true }, toObject: { virtuals: true } }
+)
+
+commentSchema.virtual('replies', {
+  ref: 'Reply',
+  foreignField: 'comment',
+  localField: '_id',
 })
 
 commentSchema.pre(/^find/, function (next) {
@@ -29,9 +36,3 @@ commentSchema.pre(/^find/, function (next) {
 const Comment = mongoose.model('Comment', commentSchema)
 
 module.exports = Comment
-
-// login user can comment
-// take user id from login user
-// take post id from req.params.postId
-
-// {{URL}}api/v1/posts/:id/comment

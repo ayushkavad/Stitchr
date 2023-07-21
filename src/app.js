@@ -3,6 +3,7 @@ const morgan = require('morgan')
 const postRouter = require('./routes/postRoutes')
 const userRouter = require('./routes/userRoutes')
 const commentRoutes = require('./routes/commentRoutes')
+const replyRouter = require('./routes/replyRoutes')
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./middlewares/errorHandler')
 
@@ -28,6 +29,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/posts', postRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/comments', commentRoutes)
+app.use('/api/v1/replys', replyRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can not found ${req.originalUrl} on this server!`, 404))

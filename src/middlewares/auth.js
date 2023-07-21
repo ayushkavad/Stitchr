@@ -68,13 +68,6 @@ exports.checkForPassword = (req, res, next) => {
   next()
 }
 
-exports.postOwner = (req, res, next) => {
-  if (!req.body.user && req.user.id) {
-    req.body.user = req.user.id
-  }
-  next()
-}
-
 exports.isOwner = async (req, res, next) => {
   const data = await Post.findById(req.params.id)
   if (req.user.id !== data.user.id)

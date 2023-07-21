@@ -26,7 +26,16 @@ exports.getAll = catchAsync(async (req, res, next) => {
 exports.getOne = catchAsync(async (req, res, next) => {
   const data = await Post.findById(req.params.id)
     .select('-__v')
-    .populate('comments')
+    .populate({
+      path: 'comments',
+      populate: {
+        path: 'replies',
+        populate: {
+          path: 'user', // Optionally, you can also populate the user details for each reply
+          select: 'name photo', // Select specific fields if needed
+        },
+      },
+    })
 
   if (!data) {
     return next(new AppError('No document found with that ID!', 404))
@@ -42,6 +51,7 @@ exports.getOne = catchAsync(async (req, res, next) => {
 
 exports.createOne = catchAsync(async (req, res, next) => {
   if (!req.body.mediaContent) req.body.mediaContent = req.file?.path
+  if (!req.body.user) req.body.user = req.user.id
   const data = await Post.create(req.body)
 
   res.status(201).json({

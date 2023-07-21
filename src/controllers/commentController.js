@@ -14,7 +14,7 @@ exports.getAllComment = catchAsync(async (req, res, next) => {
 })
 
 exports.getComment = catchAsync(async (req, res, next) => {
-  const data = await Comment.findById(req.params.id)
+  const data = await Comment.findById(req.params.id).populate('replies')
 
   if (!data) {
     return next(new AppError('No document found with that ID.', 404))
