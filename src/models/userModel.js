@@ -69,25 +69,25 @@ userSchema.pre('save', async function (next) {
   next()
 })
 
-userSchema.pre('save', async function (next) {
-  // Validate name is exist or not
-  if (!(await this.constructor.findOne({ name: this.name }))) {
-    return next()
-  }
-  return next(
-    new AppError('This name is already used. please use anohter one!', 400)
-  )
-})
+// userSchema.pre('save', async function (next) {
+//   // Validate name is exist or not
+//   if (!(await this.constructor.findOne({ name: this.name }))) {
+//     return next()
+//   }
+//   return next(
+//     new AppError('This name is already used. please use anohter one!', 400)
+//   )
+// })
 
-userSchema.pre('save', async function (next) {
-  // Validate email is exist or not
-  if (!(await this.constructor.findOne({ email: this.email }))) {
-    return next()
-  }
-  return next(
-    new AppError('This email is already used. please use another one!', 400)
-  )
-})
+// userSchema.pre('save', async function (next) {
+//   // Validate email is exist or not
+//   if (!(await this.constructor.findOne({ email: this.email }))) {
+//     return next()
+//   }
+//   return next(
+//     new AppError('This email is already used. please use another one!', 400)
+//   )
+// })
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password') || this.isNew) return next()

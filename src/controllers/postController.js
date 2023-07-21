@@ -16,6 +16,7 @@ exports.getAll = catchAsync(async (req, res, next) => {
 
   res.status(200).json({
     status: 'success',
+    posts: data.length,
     data: {
       data,
     },

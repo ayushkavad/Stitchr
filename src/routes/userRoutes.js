@@ -15,7 +15,7 @@ const {
   updateMe,
   deleteMe,
 } = require('../controllers/userController')
-const { protect, restrictTo } = require('../middlewares/auth')
+const { protect, restrictTo, checkForPassword } = require('../middlewares/auth')
 const { uploadUserPhoto } = require('../utils/upload')
 const { resizeUserPhoto } = require('../middlewares/resize')
 
@@ -24,9 +24,9 @@ const router = express.Router()
 router.post('/signup', signup)
 router.post('/login', login)
 router.post('/forgotPassword', forgotPassword)
-router.post('/resetPassword/:token', resetPassword)
+router.patch('/resetPassword/:token', resetPassword)
 
-router.patch('/updatePassword', protect, updatePassword)
+router.patch('/updateMyPassword', protect, checkForPassword, updatePassword)
 router.patch('/updateMe', protect, uploadUserPhoto, resizeUserPhoto, updateMe)
 
 router.get('/me', protect, getMe, getUser)

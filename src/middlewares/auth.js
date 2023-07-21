@@ -55,6 +55,19 @@ exports.restrictTo = (...roles) => {
   }
 }
 
+exports.checkForPassword = (req, res, next) => {
+  console.log(req.body.currentPassword === req.body.password)
+  if (req.body.currentPassword === req.body.password) {
+    return next(
+      new AppError(
+        'The password provided must not be the same as the previously used password',
+        400
+      )
+    )
+  }
+  next()
+}
+
 exports.postOwner = (req, res, next) => {
   if (!req.body.user && req.user.id) {
     req.body.user = req.user.id

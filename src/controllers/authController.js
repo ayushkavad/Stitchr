@@ -98,14 +98,15 @@ exports.forgotPassword = catchAsync(async (req, res, next) => {
 })
 
 exports.resetPassword = catchAsync(async (req, res, next) => {
+  console.log(req.params)
   const hashToken = crypto
     .createHash('sha256')
-    .update(req.body.token)
+    .update(req.params.token)
     .digest('hex')
 
   const user = await User.findOne({
     passwordResetToken: hashToken,
-    passwordChangedAt: { $ge: Date.now() },
+    passwordChangedAt: { $gt: Date.now() },
   })
 
   if (!user) {
@@ -113,7 +114,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
   }
 
   user.password = req.body.password
-  user.password = req.body.passwordConfirm
+  user.passwordConfirm = req.body.passwordConfirm
   user.passwordResetToken = undefined
   user.passwordChangedAt = undefined
   await user.save()
@@ -122,7 +123,7 @@ exports.resetPassword = catchAsync(async (req, res, next) => {
 })
 
 exports.updatePassword = catchAsync(async (req, res, next) => {
-  const user = User.findById(req.user._id).select('+password')
+  const user = await User.findById(req.user.id).select('+password')
 
   if (!(await user.correctPassword(req.body.currentPassword, user.password))) {
     return next(new AppError('Your current password is wrong.', 401))

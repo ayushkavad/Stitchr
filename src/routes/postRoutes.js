@@ -16,12 +16,12 @@ router.use('/:postId/comments', commentRoutes)
 
 router
   .route('/')
-  .get(getAll)
+  .get(protect, getAll)
   .post(protect, uploadImageCover, postOwner, createOne)
 router
   .route('/:id')
-  .get(getOne)
-  .patch(protect, updateOne)
+  .get(protect, getOne)
+  .patch(protect, isOwner, updateOne)
   .delete(protect, isOwner, deleteOne)
 
 module.exports = router
