@@ -1,7 +1,7 @@
 const sharp = require('sharp')
 
 exports.resizeUserPhoto = (req, res, next) => {
-  if (!req.file) next()
+  if (!req.file) return next()
 
   req.file.filename = `${Date.now()}.jpeg`
 
