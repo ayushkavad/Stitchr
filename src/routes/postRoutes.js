@@ -16,11 +16,11 @@ router.use('/:postId/comments', commentRoutes)
 
 router
   .route('/')
-  .get(protect, getAll)
+  .get(getAll) // Should be protected
   .post(protect, uploadImageCover, postOwner, createOne)
 router
   .route('/:id')
-  .get(protect, getOne)
+  .get(getOne) //Shold be proteced
   .patch(protect, isOwner, updateOne)
   .delete(protect, isOwner, deleteOne)
 

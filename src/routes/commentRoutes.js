@@ -1,7 +1,7 @@
 const express = require('express')
 const {
   getAllComment,
-  getOneComment,
+  getComment,
   createComment,
   updateComment,
   deleteComment,
@@ -10,10 +10,9 @@ const { protect } = require('../middlewares/auth')
 const router = express.Router({ mergeParams: true })
 
 router.route('/').get(getAllComment).post(protect, createComment)
-router.route('/:id').get(getOneComment)
-
 router
-  .route('/:postId/comments/:commentId')
+  .route('/:id')
+  .get(getComment)
   .patch(protect, updateComment)
   .delete(protect, deleteComment)
 
