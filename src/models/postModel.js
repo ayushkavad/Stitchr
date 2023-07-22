@@ -20,10 +20,12 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
-    likes: {
-      type: Number,
-      default: 0,
-    },
+    likes: [
+      {
+        type: mongoose.Schema.ObjectId,
+        ref: 'User',
+      },
+    ],
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
@@ -37,7 +39,7 @@ postSchema.virtual('comments', {
 postSchema.pre(/^find/, function (next) {
   this.populate({
     path: 'user',
-    select: '-__v -passwordChangedAt -role',
+    select: '-__v -passwordChangedAt -role -likesPhoto',
   }).populate({
     path: 'comments',
     select: '-__v',

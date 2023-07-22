@@ -71,6 +71,12 @@ const userSchema = new mongoose.Schema({
       ref: 'User',
     },
   ],
+  likePhotos: [
+    {
+      type: mongoose.Schema.ObjectId,
+      ref: 'Post',
+    },
+  ],
 })
 
 userSchema.pre('save', async function (next) {

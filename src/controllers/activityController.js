@@ -53,6 +53,7 @@ exports.unfollow = catchAsync(async (req, res, next) => {
 })
 
 exports.like = catchAsync(async (req, res, next) => {
+  const currentUser = await User.findById(req.user.id)
   const postTolike = await Post.findById(req.params.id)
 
   if (!postTolike) {
@@ -60,9 +61,11 @@ exports.like = catchAsync(async (req, res, next) => {
   }
 
   try {
-    postTolike.likes += 1
+    postTolike.likes.push(currentUser._id)
+    currentUser.likePhotos.push(postTolike._id)
 
-    await postTolike.save()
+    await postTolike.save({ validateBeforeSave: false })
+    await currentUser.save({ validateBeforeSave: false })
 
     res.status(201).json({
       status: 'success',
@@ -74,16 +77,19 @@ exports.like = catchAsync(async (req, res, next) => {
 })
 
 exports.dislike = catchAsync(async (req, res, next) => {
-  const postTolike = await Post.findById(req.params.id)
+  const currentUser = await User.findById(req.user.id)
+  const postToDislike = await Post.findById(req.params.id)
 
-  if (!postTolike) {
+  if (!postToDislike) {
     return next(new AppError('No post found with that ID', 404))
   }
 
   try {
-    postTolike.likes -= 1
+    postToDislike.likes.pull(currentUser._id)
+    currentUser.postToDislike.pull(postToDislike._id)
 
-    await postTolike.save()
+    await postToDislike.save({ validateBeforeSave: false })
+    await currentUser.save({ validateBeforeSave: false })
 
     res.status(201).json({
       status: 'success',
