@@ -29,6 +29,7 @@ exports.getReply = catchAsync(async (req, res, next) => {
 })
 
 exports.createReply = catchAsync(async (req, res, next) => {
+  console.log(req.params)
   if (!req.body.comment) req.body.comment = req.params.commentId
   if (!req.body.user) req.body.user = req.user.id
 

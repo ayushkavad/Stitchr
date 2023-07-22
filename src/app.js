@@ -29,7 +29,7 @@ app.use((req, res, next) => {
 app.use('/api/v1/posts', postRouter)
 app.use('/api/v1/users', userRouter)
 app.use('/api/v1/comments', commentRoutes)
-app.use('/api/v1/replys', replyRouter)
+app.use('/api/v1/replies', replyRouter)
 
 app.all('*', (req, res, next) => {
   next(new AppError(`Can not found ${req.originalUrl} on this server!`, 404))

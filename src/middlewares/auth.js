@@ -4,6 +4,8 @@ const User = require('../models/userModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
 const Post = require('../models/postModel')
+const Comment = require('./../models/commentModel')
+const Reply = require('../models/replyModel')
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token
@@ -68,10 +70,15 @@ exports.checkForPassword = (req, res, next) => {
   next()
 }
 
-exports.isOwner = async (req, res, next) => {
-  const data = await Post.findById(req.params.id)
+const message = (req, data, next) => {
   if (req.user.id !== data.user.id)
     return next(new AppError('You are not allow to perform this action.', 400))
-
   next()
+}
+
+exports.isOwner = (Model) => {
+  return async (req, res, next) => {
+    const data = await Model.findById(req.params.id)
+    return message(req, data, next)
+  }
 }
