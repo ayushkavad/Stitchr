@@ -20,6 +20,10 @@ const postSchema = new mongoose.Schema(
       type: mongoose.Schema.ObjectId,
       ref: 'User',
     },
+    likes: {
+      type: Number,
+      default: 0,
+    },
   },
   { toJSON: { virtuals: true }, toObject: { virtuals: true } }
 )
