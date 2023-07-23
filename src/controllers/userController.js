@@ -29,20 +29,7 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.getUser = catchAsync(async (req, res, next) => {
-  const data = await User.findById(req.params.id)
-
-  if (!data) {
-    return next(new AppError('No Document found with that ID', 404))
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
+exports.getUser = factory.getOne(User)
 
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
@@ -79,38 +66,6 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   })
 })
 
-// exports.updateUser = catchAsync(async (req, res, next) => {
-//   const data = await User.findByIdAndUpdate(req.params.id, req.body, {
-//     new: true,
-//     runValidators: true,
-//   })
-
-//   if (!data) {
-//     return next(new AppError('No Document found with that ID', 404))
-//   }
-
-//   res.status(200).json({
-//     status: 'success',
-//     data: {
-//       data,
-//     },
-//   })
-// })
-
 // Only admin can perform this action
 exports.updateUser = factory.updateOne(User)
 exports.deleteUser = factory.deleteOne(User)
-
-// exports.deleteUser = catchAsync(async (req, res, next) => {
-//   const data = await User.findByIdAndDelete(req.params.id)
-
-//   if (!data) {
-//     return next(new AppError('No Document found with that ID.', 404))
-//   }
-//   res.status(204).json({
-//     status: 'success',
-//     data: {
-//       data: null,
-//     },
-//   })
-// })

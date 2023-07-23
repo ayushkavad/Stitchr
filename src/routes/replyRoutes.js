@@ -8,10 +8,14 @@ const {
 } = require('./../controllers/replyController')
 const Reply = require('./../models/replyModel')
 const { protect, isOwner } = require('./../middlewares/auth')
+const { setDefaultValueReply } = require('./../middlewares/create')
 
 const router = express.Router({ mergeParams: true })
 
-router.route('/').get(protect, getAllReply).post(protect, createReply)
+router
+  .route('/')
+  .get(protect, getAllReply)
+  .post(protect, setDefaultValueReply, createReply)
 router
   .route('/:id')
   .get(protect, getReply)

@@ -34,6 +34,35 @@ exports.updateOne = (Model) =>
     })
   })
 
+exports.createOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    if (!req.body.user) req.body.user = req.user.id
+    const doc = await Model.create(req.body)
+
+    res.status(201).json({
+      status: 'success',
+      data: {
+        data: doc,
+      },
+    })
+  })
+
+exports.getOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findById(req.params.id).select('-__v')
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID!', 404))
+    }
+
+    res.status(200).json({
+      status: 'success',
+      data: {
+        data: doc,
+      },
+    })
+  })
+
 // exports.userFollowUnfollow = (Model) =>
 //   catchAsync(async (req, res, next) => {
 //     const currentUser = await Model.findById(req.user.id)
