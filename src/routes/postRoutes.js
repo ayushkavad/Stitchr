@@ -1,6 +1,6 @@
 const express = require('express')
 const {
-  getAll,
+  getAllPost,
   getPost,
   createPost,
   updatePost,
@@ -18,7 +18,7 @@ router.use('/:postId/comments', commentRoutes)
 
 router
   .route('/')
-  .get(protect, getAll)
+  .get(protect, getAllPost)
   .post(protect, uploadImageCover, setDefaultValuePost, createPost)
 router
   .route('/:id')

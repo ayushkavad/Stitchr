@@ -1,26 +1,32 @@
 const AppError = require('./../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
+const APIFeatures = require('./../utils/apiFeatures')
 
-exports.deleteOne = (Model) =>
+exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndDelete(req.params.id)
+    let filter = {}
+    if (req.params.postId) filter = { post: req.params.postId }
+    if (req.params.commentId) filter = { comment: req.params.commentId }
 
-    if (!doc) {
-      return next(new AppError('No document found with that ID!', 404))
-    }
+    const features = new APIFeatures(Model.find(filter), req.query)
+      .filter()
+      .sort()
+      .limit()
+      .paginate()
 
-    res.status(204).json({
+    const doc = await features.query
+
+    res.status(200).json({
       status: 'success',
-      data: null,
+      data: {
+        data: doc,
+      },
     })
   })
 
-exports.updateOne = (Model) =>
+exports.getOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    })
+    const doc = await Model.findById(req.params.id).select('-__v')
 
     if (!doc) {
       return next(new AppError('No document found with that ID!', 404))
@@ -47,9 +53,12 @@ exports.createOne = (Model) =>
     })
   })
 
-exports.getOne = (Model) =>
+exports.updateOne = (Model) =>
   catchAsync(async (req, res, next) => {
-    const doc = await Model.findById(req.params.id).select('-__v')
+    const doc = await Model.findByIdAndUpdate(req.params.id, req.body, {
+      new: true,
+      runValidators: true,
+    })
 
     if (!doc) {
       return next(new AppError('No document found with that ID!', 404))
@@ -60,6 +69,20 @@ exports.getOne = (Model) =>
       data: {
         data: doc,
       },
+    })
+  })
+
+exports.deleteOne = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const doc = await Model.findByIdAndDelete(req.params.id)
+
+    if (!doc) {
+      return next(new AppError('No document found with that ID!', 404))
+    }
+
+    res.status(204).json({
+      status: 'success',
+      data: null,
     })
   })
 

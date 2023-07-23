@@ -17,20 +17,6 @@ exports.getMe = (req, res, next) => {
   next()
 }
 
-exports.getAllUsers = catchAsync(async (req, res, next) => {
-  const data = await User.find()
-
-  res.status(200).json({
-    status: 'success',
-    users: data.length,
-    data: {
-      data,
-    },
-  })
-})
-
-exports.getUser = factory.getOne(User)
-
 exports.updateMe = catchAsync(async (req, res, next) => {
   if (req.body.password || req.body.passwordConfirm) {
     return next(
@@ -66,6 +52,8 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   })
 })
 
+exports.getAllUsers = factory.getAll(User)
+exports.getUser = factory.getOne(User)
 // Only admin can perform this action
 exports.updateUser = factory.updateOne(User)
 exports.deleteUser = factory.deleteOne(User)
