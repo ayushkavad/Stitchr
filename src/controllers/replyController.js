@@ -1,6 +1,7 @@
 const catchAsync = require('../utils/catchAsync')
 const Reply = require('./../models/replyModel')
 const AppError = require('./../utils/appError')
+const factory = require('./handlerFactory')
 
 exports.getAllReply = catchAsync(async (req, res, next) => {
   const data = await Reply.find()
@@ -43,35 +44,38 @@ exports.createReply = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.updateRelpy = catchAsync(async (req, res, next) => {
-  const data = await Reply.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  })
+// exports.updateRelpy = catchAsync(async (req, res, next) => {
+//   const data = await Reply.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   })
 
-  if (!data) {
-    return next(new AppError('No Document found with that ID.', 404))
-  }
+//   if (!data) {
+//     return next(new AppError('No Document found with that ID.', 404))
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       data,
+//     },
+//   })
+// })
 
-exports.deleteReply = catchAsync(async (req, res, next) => {
-  const data = await Reply.findByIdAndDelete(req.params.id)
+exports.updateRelpy = factory.updateOne(Reply)
+exports.deleteReply = factory.deleteOne(Reply)
 
-  if (!data) {
-    return next(new AppError('No Document found with that ID.', 404))
-  }
+// exports.deleteReply = catchAsync(async (req, res, next) => {
+//   const data = await Reply.findByIdAndDelete(req.params.id)
 
-  res.status(204).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
+//   if (!data) {
+//     return next(new AppError('No Document found with that ID.', 404))
+//   }
+
+//   res.status(204).json({
+//     status: 'success',
+//     data: {
+//       data,
+//     },
+//   })
+// })

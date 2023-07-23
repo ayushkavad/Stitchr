@@ -2,6 +2,7 @@ const Post = require('./../models/postModel')
 const catchAsync = require('./../utils/catchAsync')
 const AppError = require('./../utils/appError')
 const APIFeatures = require('./../utils/apiFeatures')
+const factory = require('./handlerFactory')
 
 exports.getAll = catchAsync(async (req, res, next) => {
   let filter = {}
@@ -51,35 +52,37 @@ exports.createOne = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.updateOne = catchAsync(async (req, res, next) => {
-  const data = await Post.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  })
+// exports.updatePost = catchAsync(async (req, res, next) => {
+//   const data = await Post.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   })
 
-  if (!data) {
-    return next(new AppError('No document found with that ID!', 404))
-  }
+//   if (!data) {
+//     return next(new AppError('No document found with that ID!', 404))
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       data,
+//     },
+//   })
+// })
 
-exports.deleteOne = catchAsync(async (req, res, next) => {
-  const data = await Post.findByIdAndDelete(req.params.id)
+exports.updatePost = factory.updateOne(Post)
+exports.deletePost = factory.deleteOne(Post)
+// exports.deleteOne = catchAsync(async (req, res, next) => {
+//   const data = await Post.findByIdAndDelete(req.params.id)
 
-  if (!data) {
-    return next(new AppError('No document found with that ID!', 404))
-  }
+//   if (!data) {
+//     return next(new AppError('No document found with that ID!', 404))
+//   }
 
-  res.status(204).json({
-    status: 'success',
-    data: {
-      data: null,
-    },
-  })
-})
+//   res.status(204).json({
+//     status: 'success',
+//     data: {
+//       data: null,
+//     },
+//   })
+// })

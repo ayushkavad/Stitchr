@@ -1,6 +1,7 @@
 const catchAsync = require('../utils/catchAsync')
 const Comment = require('./../models/commentModel')
 const AppError = require('./../utils/appError')
+const factory = require('./handlerFactory')
 
 exports.getAllComment = catchAsync(async (req, res, next) => {
   const data = await Comment.find()
@@ -45,35 +46,38 @@ exports.createComment = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.updateComment = catchAsync(async (req, res, next) => {
-  const data = await Comment.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  })
+// exports.updateComment = catchAsync(async (req, res, next) => {
+//   const data = await Comment.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   })
 
-  if (!data) {
-    return next(new AppError('No document found with that ID.', 404))
-  }
+//   if (!data) {
+//     return next(new AppError('No document found with that ID.', 404))
+//   }
 
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       data,
+//     },
+//   })
+// })
 
-exports.deleteComment = catchAsync(async (req, res, next) => {
-  const data = await Comment.findByIdAndDelete(req.params.id)
+exports.updateComment = factory.updateOne(Comment)
+exports.deleteComment = factory.deleteOne(Comment)
 
-  if (!data) {
-    return next(new AppError('No document found with that ID.', 404))
-  }
+// exports.deleteComment = catchAsync(async (req, res, next) => {
+//   const data = await Comment.findByIdAndDelete(req.params.id)
 
-  res.status(204).json({
-    status: 'success',
-    data: {
-      data: null,
-    },
-  })
-})
+//   if (!data) {
+//     return next(new AppError('No document found with that ID.', 404))
+//   }
+
+//   res.status(204).json({
+//     status: 'success',
+//     data: {
+//       data: null,
+//     },
+//   })
+// })

@@ -3,8 +3,8 @@ const {
   getAll,
   getOne,
   createOne,
-  updateOne,
-  deleteOne,
+  updatePost,
+  deletePost,
 } = require('../controllers/postController')
 const Post = require('./../models/postModel')
 const { uploadImageCover } = require('./../utils/upload')
@@ -22,7 +22,7 @@ router
 router
   .route('/:id')
   .get(getOne)
-  .patch(protect, isOwner(Post), updateOne)
-  .delete(protect, isOwner(Post), deleteOne)
+  .patch(protect, isOwner(Post), updatePost)
+  .delete(protect, isOwner(Post), deletePost)
 
 module.exports = router

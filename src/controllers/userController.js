@@ -1,6 +1,7 @@
 const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
+const factory = require('./handlerFactory')
 
 const filrerFields = (obj, ...allowedFields) => {
   const newObj = {}
@@ -30,24 +31,6 @@ exports.getAllUsers = catchAsync(async (req, res, next) => {
 
 exports.getUser = catchAsync(async (req, res, next) => {
   const data = await User.findById(req.params.id)
-
-  if (!data) {
-    return next(new AppError('No Document found with that ID', 404))
-  }
-
-  res.status(200).json({
-    status: 'success',
-    data: {
-      data,
-    },
-  })
-})
-
-exports.updateUser = catchAsync(async (req, res, next) => {
-  const data = await User.findByIdAndUpdate(req.params.id, req.body, {
-    new: true,
-    runValidators: true,
-  })
 
   if (!data) {
     return next(new AppError('No Document found with that ID', 404))
@@ -96,16 +79,38 @@ exports.deleteMe = catchAsync(async (req, res, next) => {
   })
 })
 
-exports.deleteUser = catchAsync(async (req, res, next) => {
-  const data = await User.findByIdAndDelete(req.params.id)
+// exports.updateUser = catchAsync(async (req, res, next) => {
+//   const data = await User.findByIdAndUpdate(req.params.id, req.body, {
+//     new: true,
+//     runValidators: true,
+//   })
 
-  if (!data) {
-    return next(new AppError('No Document found with that ID.', 404))
-  }
-  res.status(204).json({
-    status: 'success',
-    data: {
-      data: null,
-    },
-  })
-})
+//   if (!data) {
+//     return next(new AppError('No Document found with that ID', 404))
+//   }
+
+//   res.status(200).json({
+//     status: 'success',
+//     data: {
+//       data,
+//     },
+//   })
+// })
+
+// Only admin can perform this action
+exports.updateUser = factory.updateOne(User)
+exports.deleteUser = factory.deleteOne(User)
+
+// exports.deleteUser = catchAsync(async (req, res, next) => {
+//   const data = await User.findByIdAndDelete(req.params.id)
+
+//   if (!data) {
+//     return next(new AppError('No Document found with that ID.', 404))
+//   }
+//   res.status(204).json({
+//     status: 'success',
+//     data: {
+//       data: null,
+//     },
+//   })
+// })

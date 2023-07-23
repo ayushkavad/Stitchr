@@ -2,6 +2,10 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
 const Post = require('./../models/postModel')
+// const { userFollowUnfollow, userLikeDislike } = require('./handlerFactory')
+
+// exports.follow = userFollowUnfollow(User)
+// exports.unfollow = userFollowUnfollow(User)
 
 exports.follow = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(req.user.id)
@@ -51,6 +55,9 @@ exports.unfollow = catchAsync(async (req, res, next) => {
     return next(new AppError('Internal server error. Please try again!', 500))
   }
 })
+
+// exports.like = userLikeDislike({ User, Post })
+// exports.dislike = userLikeDislike({ User, Post })
 
 exports.like = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(req.user.id)
