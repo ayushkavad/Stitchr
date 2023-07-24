@@ -7,12 +7,42 @@ const replyRouter = require('./routes/replyRoutes')
 const activityRouter = require('./routes/activityRouter')
 const AppError = require('./utils/appError')
 const globalErrorHandler = require('./middlewares/errorHandler')
+const helmet = require('helmet')
+const rateLimit = require('express-rate-limit')
+const xss = require('xss-clean')
+const hpp = require('hpp')
+const cookieParser = require('cookie-parser')
+const mongoSanitize = require('express-mongo-sanitize')
 
 const app = express()
 
 app.use(express.json())
 
+app.use(helmet())
+
 if (process.env.NODE_ENV === 'development') app.use(morgan('dev'))
+
+const limiter = rateLimit({
+  windowMs: 60 * 60 * 1000,
+  max: 100,
+  message: 'Too many request sent from this IP, please try again after an hour',
+})
+
+app.use('/api', limiter)
+
+app.use(express.json({ limit: '1mb' }))
+
+app.use(cookieParser())
+
+app.use(mongoSanitize())
+
+app.use(xss())
+
+app.use(
+  hpp({
+    whitelist: ['name'],
+  })
+)
 
 app.get('/', (req, res) => {
   res.status(200).json({
