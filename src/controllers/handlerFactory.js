@@ -87,66 +87,67 @@ exports.deleteOne = (Model) =>
     })
   })
 
-// exports.userFollowUnfollow = (Model) =>
-//   catchAsync(async (req, res, next) => {
-//     const currentUser = await Model.findById(req.user.id)
-//     const user = await Model.findById(req.params.id)
+exports.userFollowUnfollow = (Model) =>
+  catchAsync(async (req, res, next) => {
+    const currentUser = await Model.findById(req.user.id)
+    const user = await Model.findById(req.params.id)
 
-//     if (!currentUser || !user) {
-//       return next(new AppError('No user found with that ID!', 404))
-//     }
+    if (!currentUser || !user) {
+      return next(new AppError('No user found with that ID!', 404))
+    }
 
-//     try {
-//       if (req.originalUrl.includes('/follow')) {
-//         currentUser.following.push(user._id)
-//         user.followers.push(currentUser._id)
-//       } else if (req.originalUrl.includes('/unfollow')) {
-//         currentUser.following.pull(user._id)
-//         user.followers.pull(currentUser._id)
-//       }
+    try {
+      if (req.originalUrl.includes('/follow')) {
+        currentUser.following.push(user._id)
+        user.followers.push(currentUser._id)
+      } else if (req.originalUrl.includes('/unfollow')) {
+        currentUser.following.pull(user._id)
+        user.followers.pull(currentUser._id)
+      }
 
-//       await currentUser.save({ validateBeforeSave: false })
-//       await user.save({ validateBeforeSave: false })
+      await currentUser.save({ validateBeforeSave: false })
+      await user.save({ validateBeforeSave: false })
 
-//       res.status(201).json({
-//         status: 'success',
-//         message: `You ${req.originalUrl.includes(
-//           '/follow' ? 'Followd' : 'Unfollowed'
-//         )} successfully.`,
-//       })
-//     } catch (err) {
-//       return next(new AppError('Internal server error. Please try again!', 500))
-//     }
-//   })
+      res.status(201).json({
+        status: 'success',
+        message: `You ${
+          req.originalUrl.includes('/follow') ? 'Followd' : 'Unfollowed'
+        } successfully.`,
+      })
+    } catch (err) {
+      return next(new AppError('Internal server error. Please try again!', 500))
+    }
+  })
 
-// exports.userLikeDislike = (Model) => {
-//   const { User, Post } = Model
-//   catchAsync(async (req, res, next) => {
-//     const currentUser = await User.findById(req.user.id)
-//     const post = await Post.findById(req.params.id)
+exports.userLikeDislike = (Model) => {
+  const { User, Post } = Model
 
-//     if (!currentUser || !post) {
-//       return next(new AppError('No post found with that ID', 404))
-//     }
+  catchAsync(async (req, res, next) => {
+    const currentUser = await User.findById(req.user.id)
+    const post = await Post.findById(req.params.id)
 
-//     try {
-//       if (req.originalUrl.includes('/like')) {
-//         post.likes.push(currentUser._id)
-//         currentUser.likePhotos.push(post._id)
-//       } else if (req.originalUrl.includes('/dislike')) {
-//         post.likes.pull(currentUser._id)
-//         currentUser.likePhotos.pull(post._id)
-//       }
+    if (!currentUser || !post) {
+      return next(new AppError('No post found with that ID', 404))
+    }
 
-//       await post.save({ validateBeforeSave: false })
-//       await currentUser.save({ validateBeforeSave: false })
+    try {
+      if (req.originalUrl.includes('/like')) {
+        post.likes.push(currentUser._id)
+        currentUser.likePhotos.push(post._id)
+      } else if (req.originalUrl.includes('/dislike')) {
+        post.likes.pull(currentUser._id)
+        currentUser.likePhotos.pull(post._id)
+      }
 
-//       res.status(201).json({
-//         status: 'success',
-//         message: `You ${req.originalUrl('/like') ? 'like' : 'dislike'} it!`,
-//       })
-//     } catch (err) {
-//       return next(new AppError('Internal server error. Please try again!', 500))
-//     }
-//   })
-// }
+      await post.save({ validateBeforeSave: false })
+      await currentUser.save({ validateBeforeSave: false })
+
+      res.status(201).json({
+        status: 'success',
+        message: `You ${req.originalUrl('/like') ? 'like' : 'dislike'} it!`,
+      })
+    } catch (err) {
+      return next(new AppError('Internal server error. Please try again!', 500))
+    }
+  })
+}

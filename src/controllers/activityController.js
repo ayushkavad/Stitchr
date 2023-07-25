@@ -2,62 +2,62 @@ const AppError = require('../utils/appError')
 const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
 const Post = require('./../models/postModel')
-// const { userFollowUnfollow, userLikeDislike } = require('./handlerFactory')
+const factory = require('./handlerFactory')
 
-// exports.follow = userFollowUnfollow(User)
-// exports.unfollow = userFollowUnfollow(User)
+exports.follow = factory.userFollowUnfollow(User)
+exports.unfollow = factory.userFollowUnfollow(User)
 
-exports.follow = catchAsync(async (req, res, next) => {
-  const currentUser = await User.findById(req.user.id)
-  const userToFollow = await User.findById(req.params.id)
+// exports.follow = catchAsync(async (req, res, next) => {
+//   const currentUser = await User.findById(req.user.id)
+//   const userToFollow = await User.findById(req.params.id)
 
-  if (!userToFollow) {
-    return next(new AppError('User is not found!', 404))
-  }
+//   if (!userToFollow) {
+//     return next(new AppError('User is not found!', 404))
+//   }
 
-  try {
-    currentUser.following.push(userToFollow._id)
-    userToFollow.followers.push(currentUser._id)
+//   try {
+//     currentUser.following.push(userToFollow._id)
+//     userToFollow.followers.push(currentUser._id)
 
-    await currentUser.save({ validateBeforeSave: false })
-    await userToFollow.save({ validateBeforeSave: false })
+//     await currentUser.save({ validateBeforeSave: false })
+//     await userToFollow.save({ validateBeforeSave: false })
 
-    res.status(201).json({
-      status: 'success',
-      message: 'Followed successfully.',
-    })
-  } catch (err) {
-    console.log(err)
-    return next(new AppError('Internal server error. Please try again!', 500))
-  }
-})
+//     res.status(201).json({
+//       status: 'success',
+//       message: 'Followed successfully.',
+//     })
+//   } catch (err) {
+//     console.log(err)
+//     return next(new AppError('Internal server error. Please try again!', 500))
+//   }
+// })
 
-exports.unfollow = catchAsync(async (req, res, next) => {
-  const currentUser = await User.findById(req.user.id)
-  const userToUnfollow = await User.findById(req.params.id)
+// exports.unfollow = catchAsync(async (req, res, next) => {
+//   const currentUser = await User.findById(req.user.id)
+//   const userToUnfollow = await User.findById(req.params.id)
 
-  if (!currentUser || !userToUnfollow) {
-    return next(new AppError('No user found with that ID!', 404))
-  }
+//   if (!currentUser || !userToUnfollow) {
+//     return next(new AppError('No user found with that ID!', 404))
+//   }
 
-  try {
-    currentUser.following.pull(userToUnfollow._id)
-    userToUnfollow.followers.pull(currentUser._id)
+//   try {
+//     currentUser.following.pull(userToUnfollow._id)
+//     userToUnfollow.followers.pull(currentUser._id)
 
-    await currentUser.save({ validateBeforeSave: false })
-    await userToUnfollow.save({ validateBeforeSave: false })
+//     await currentUser.save({ validateBeforeSave: false })
+//     await userToUnfollow.save({ validateBeforeSave: false })
 
-    res.status(201).json({
-      status: 'success',
-      message: 'Unfollowed successfully.',
-    })
-  } catch (err) {
-    return next(new AppError('Internal server error. Please try again!', 500))
-  }
-})
+//     res.status(201).json({
+//       status: 'success',
+//       message: 'Unfollowed successfully.',
+//     })
+//   } catch (err) {
+//     return next(new AppError('Internal server error. Please try again!', 500))
+//   }
+// })
 
-// exports.like = userLikeDislike({ User, Post })
-// exports.dislike = userLikeDislike({ User, Post })
+// exports.like = factory.userLikeDislike({ User, Post })
+// exports.dislike = factory.userLikeDislike({ User, Post })
 
 exports.like = catchAsync(async (req, res, next) => {
   const currentUser = await User.findById(req.user.id)
