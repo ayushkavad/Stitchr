@@ -9,7 +9,7 @@ const {
 const Post = require('./../models/postModel')
 const { uploadImageCover } = require('./../utils/upload')
 const { protect, isOwner } = require('./../middlewares/auth')
-const { setDefaultValuePost } = require('./../middlewares/create')
+const { setDefaultValuePost } = require('../middlewares/setParams')
 const commentRoutes = require('./../routes/commentRoutes')
 
 const router = express.Router()

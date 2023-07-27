@@ -119,9 +119,7 @@ exports.userFollowUnfollow = (Model) =>
     }
   })
 
-exports.userLikeDislike = (Model) => {
-  const { User, Post } = Model
-
+exports.userLikeDislike = ({ User, Post }) =>
   catchAsync(async (req, res, next) => {
     const currentUser = await User.findById(req.user.id)
     const post = await Post.findById(req.params.id)
@@ -144,10 +142,11 @@ exports.userLikeDislike = (Model) => {
 
       res.status(201).json({
         status: 'success',
-        message: `You ${req.originalUrl('/like') ? 'like' : 'dislike'} it!`,
+        message: `You ${
+          req.originalUrl.includes('/like') ? 'like' : 'dislike'
+        } successfully.`,
       })
     } catch (err) {
       return next(new AppError('Internal server error. Please try again!', 500))
     }
   })
-}
