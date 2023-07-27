@@ -1,5 +1,3 @@
-const AppError = require('../utils/appError')
-const catchAsync = require('../utils/catchAsync')
 const User = require('./../models/userModel')
 const Post = require('./../models/postModel')
 const factory = require('./handlerFactory')

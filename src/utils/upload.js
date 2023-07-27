@@ -9,8 +9,7 @@ const multerUpload = (storage, fileFilter) => {
   }
 }
 
-// .................................................................
-
+// post image upload
 const storage = multer.diskStorage({
   destination: function (req, file, cb) {
     cb(null, 'public/posts')
@@ -34,8 +33,7 @@ const upload = multer(multerUpload(storage, multerFilterPost))
 
 exports.uploadImageCover = upload.single('mediaContent')
 
-// .................................................................
-
+// user image upload
 const multerStorageUser = multer.memoryStorage()
 
 const multerFilterUser = (req, file, cb) => {

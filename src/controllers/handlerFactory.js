@@ -1,6 +1,7 @@
 const AppError = require('./../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
 const APIFeatures = require('./../utils/apiFeatures')
+const mongoose = require('mongoose')
 
 exports.getAll = (Model) =>
   catchAsync(async (req, res, next) => {
@@ -14,7 +15,32 @@ exports.getAll = (Model) =>
       .limit()
       .paginate()
 
-    const doc = await features.query
+    let doc
+    if (Model === mongoose.model('User') && req.query.search) {
+      doc = await Model.aggregate([
+        {
+          $search: {
+            index: 'SearchName',
+            compound: {
+              should: [
+                {
+                  autocomplete: {
+                    query: req.query.search,
+                    path: 'name',
+                    fuzzy: {
+                      maxEdits: 2,
+                    },
+                  },
+                },
+              ],
+              minimumShouldMatch: 1,
+            },
+          },
+        },
+      ])
+    } else {
+      doc = await features.query
+    }
 
     res.status(200).json({
       status: 'success',

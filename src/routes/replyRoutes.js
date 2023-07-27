@@ -6,9 +6,9 @@ const {
   updateRelpy,
   deleteReply,
 } = require('./../controllers/replyController')
-const Reply = require('./../models/replyModel')
 const { protect, isOwner } = require('./../middlewares/auth')
 const { setDefaultValueReply } = require('../middlewares/setParams')
+const Reply = require('./../models/replyModel')
 
 const router = express.Router({ mergeParams: true })
 

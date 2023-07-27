@@ -6,10 +6,10 @@ const {
   updatePost,
   deletePost,
 } = require('../controllers/postController')
-const Post = require('./../models/postModel')
-const { uploadImageCover } = require('./../utils/upload')
 const { protect, isOwner } = require('./../middlewares/auth')
 const { setDefaultValuePost } = require('../middlewares/setParams')
+const { uploadImageCover } = require('./../utils/upload')
+const Post = require('./../models/postModel')
 const commentRoutes = require('./../routes/commentRoutes')
 
 const router = express.Router()
@@ -22,7 +22,7 @@ router
   .post(protect, uploadImageCover, setDefaultValuePost, createPost)
 router
   .route('/:id')
-  .get(getPost)
+  .get(protect, getPost)
   .patch(protect, isOwner(Post), updatePost)
   .delete(protect, isOwner(Post), deletePost)
 

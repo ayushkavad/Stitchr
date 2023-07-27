@@ -6,9 +6,9 @@ const {
   updateComment,
   deleteComment,
 } = require('./../controllers/commentController')
-const Comment = require('./../models/commentModel')
 const { protect, isOwner } = require('../middlewares/auth')
 const { setDefaultValueComment } = require('../middlewares/setParams')
+const Comment = require('./../models/commentModel')
 const replyRouter = require('./replyRoutes')
 const router = express.Router({ mergeParams: true })
 

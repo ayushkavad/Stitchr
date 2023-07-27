@@ -3,9 +3,6 @@ const jwt = require('jsonwebtoken')
 const User = require('../models/userModel')
 const AppError = require('../utils/appError')
 const catchAsync = require('./../utils/catchAsync')
-const Post = require('../models/postModel')
-const Comment = require('./../models/commentModel')
-const Reply = require('../models/replyModel')
 
 exports.protect = catchAsync(async (req, res, next) => {
   let token
@@ -58,7 +55,6 @@ exports.restrictTo = (...roles) => {
 }
 
 exports.checkForPassword = (req, res, next) => {
-  console.log(req.body.currentPassword === req.body.password)
   if (req.body.currentPassword === req.body.password) {
     return next(
       new AppError(

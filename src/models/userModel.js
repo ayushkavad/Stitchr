@@ -79,21 +79,18 @@ const userSchema = new mongoose.Schema({
   ],
 })
 
+userSchema.index({ name: 1 })
+
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password')) return next()
-
   this.password = await bcrypt.hash(this.password, 12)
-
   this.passwordConfirm = undefined
-
   next()
 })
 
 userSchema.pre('save', async function (next) {
   if (!this.isModified('password') || this.isNew) return next()
-
   this.passwordChangedAt = Date.now() - 1000
-
   next()
 })
 
@@ -129,7 +126,6 @@ userSchema.methods.createPasswordResetToken = function () {
     .digest('hex')
 
   this.passwordChangedAt = Date.now() + 10 * 60 * 1000
-
   return resetToken
 }
 
