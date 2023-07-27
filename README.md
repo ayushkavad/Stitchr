@@ -18,7 +18,8 @@ Welcome to the Stitchr Backend repository! This project contains the server-side
 - Stitch Management: Post, retrieve, and delete stitch.
 - Followers/Following: Manage user relationships and follow other users.
 - Search: Find users and tweets with a powerful search functionality.
-- Comments/Replies : User can make comment and reply on post
+- Comments/Replies : User can make comment and reply on posts
+- Like/Dislike: User can like and dislike posts
 
 ## Getting Started
 
