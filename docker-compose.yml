@@ -7,7 +7,7 @@ services:
     image: stitchr-api:v1
     restart: always
     ports:
-      - 8000:8000
+      - 8080:8080
     volumes:
       - .:/app
     depends_on:
