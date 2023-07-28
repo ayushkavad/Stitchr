@@ -8,7 +8,6 @@ Welcome to the Stitchr Backend repository! This project contains the server-side
 - Getting Started
   - Prerequisites
   - Installation
-- API Documentation
 - Contributing
 - License
 
