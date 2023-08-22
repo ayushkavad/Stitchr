@@ -8,7 +8,6 @@ Welcome to the Stitchr Backend repository! This project contains the server-side
 - Getting Started
   - Prerequisites
   - Installation
-- API Documentation
 - Contributing
 - License
 
@@ -77,10 +76,6 @@ To run the Stitchr backend locally or contribute to the project, follow the inst
     ```
 
     This command will spin up the backend services along with the MongoDB database. The backend will be accessible at `http://localhost:8080`, The MongoDB database will be running on `localhost` on port `27017`.
-
-## API Documentation
-
-For detailed API documentation and usage, please refer to the API.md file.
 
 ## Contribution Guidelines
 
