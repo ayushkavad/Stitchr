@@ -37,8 +37,20 @@ app.use(cookieParser())
 app.use(mongoSanitize())
 app.use(xss())
 app.use(compression())
-app.use(cors())
-app.options('*', cors())
+
+app.use((req, res, next) => {
+  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader(
+    'Access-Control-Allow-Methods',
+    'GET, POST, PUT, DELETE, OPTIONS'
+  )
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type, Authorization')
+  res.setHeader('Access-Control-Allow-Credentials', 'true')
+  next()
+})
+
+// app.use(cors({ origin: 'http://127.0.0.1:3000/', credentials: true }))
+// app.options('*', cors())
 
 app.get('/', (req, res) => {
   res.status(200).json({
@@ -49,6 +61,7 @@ app.get('/', (req, res) => {
 
 app.use((req, res, next) => {
   req.requestTime = new Date().toISOString()
+  console.log(req.cookies)
   next()
 })
 
