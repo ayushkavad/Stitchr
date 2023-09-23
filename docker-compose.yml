@@ -1,7 +1,7 @@
 version: '3'
 services:
   app:
-    build: . 
+    build: .
     image: stitchr-api:v1
     restart: always
     ports:
@@ -20,6 +20,7 @@ services:
     volumes:
       - mongo-data:/data/db
     ports:
+      - MONGO_INITDB_ROOT_USERNAME
       - 27017:27017
     environment:
       - MONGO_INITDB_ROOT_USERNAME=${DATABASE_ROOT_USER}
