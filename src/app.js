@@ -6,7 +6,7 @@ const mongoSanitize = require('express-mongo-sanitize')
 const xss = require('xss-clean')
 const cookieParser = require('cookie-parser')
 const compression = require('compression')
-const cors = require('cors')
+// const cors = require('cors')
 
 const AppError = require('./utils/appError')
 const postRouter = require('./routes/postRoutes')
@@ -39,7 +39,7 @@ app.use(xss())
 app.use(compression())
 
 app.use((req, res, next) => {
-  res.setHeader('Access-Control-Allow-Origin', 'http://localhost:3000')
+  res.setHeader('Access-Control-Allow-Origin', 'http://127.0.0.1:3000')
   res.setHeader(
     'Access-Control-Allow-Methods',
     'GET, POST, PUT, DELETE, OPTIONS'

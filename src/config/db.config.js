@@ -3,6 +3,4 @@ const DB = process.env.DATABASE_URL.replace(
   process.env.DATABASE_ROOT_PASSWORD
 )
 
-module.exports = {
-  DB,
-}
+module.exports = { DB }

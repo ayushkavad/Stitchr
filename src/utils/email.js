@@ -11,7 +11,7 @@ module.exports = async ({ email, resetURL: resetToken }) => {
   })
 
   const mailOptions = {
-    from: 'John Devid <theak5410@gmail.com>',
+    from: 'John Devid <me@gmail.com>',
     to: email,
     subject: 'Your Stitchr reset password request',
     text: `A request has been received to change the password for your stitchr account. ${resetToken}`,
